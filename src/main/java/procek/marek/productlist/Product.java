@@ -11,9 +11,12 @@ public class Product {
         this.productCategory = productCategory;
     }
 
+    public Product() {
+    }
+
     @Override
     public String toString() {
-        return name + " ," + price + " ," + productCategory ;
+        return name + " ," + price + " ," + productCategory;
     }
 
     public String getName() {

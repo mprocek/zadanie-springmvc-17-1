@@ -1,45 +1,41 @@
 package procek.marek.productlist;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class ProductController {
 
     private ProductRepository productRepository;
+    private Product newProduct = new Product();
 
     public ProductController(ProductRepository productRepository){
         this.productRepository = productRepository;
     }
 
-    @RequestMapping("/")
-    public String startpage(){
-        return "startpage.html";
+    @GetMapping("/")
+    public String menu(Model model){
+        ProductCategory[] productCategory = ProductCategory.values();
+        model.addAttribute("productList", productCategory);
+        return "menu";
     }
 
     @ResponseBody
-    @RequestMapping("/list")
-    public String products(){
-        return productRepository.getProduct();
+    @GetMapping("/list")
+    public String products(@RequestParam(value = "kategoria",required = false) ProductCategory productCategory){
+        return productRepository.getProduct(productCategory);
     }
 
-    @ResponseBody
-    @GetMapping("/groceries")
-    public String productsGroceries(@RequestParam String category){
-        return productRepository.getProductCategory(ProductCategory.valueOf(category));
+    @GetMapping("/add")
+    public String addProductFrom(Model model){
+        model.addAttribute("product", newProduct);
+        return "addProduct";
     }
 
-    @ResponseBody
-    @RequestMapping("/household")
-    public String productsHousehold(@RequestParam String category){
-        return productRepository.getProductCategory(ProductCategory.valueOf(category));
+    @PostMapping("/return")
+    public String addProduct(){
+        productRepository.addProduct(newProduct);
+        return "redirect:/";
     }
-
-    @ResponseBody
-    @RequestMapping("/other")
-    public String productsOther(@RequestParam String category){
-        return productRepository.getProductCategory(ProductCategory.valueOf(category));
-    }
-
-
 }
