@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
 
     private ProductRepository productRepository;
-    private Product newProduct = new Product();
 
     public ProductController(ProductRepository productRepository){
         this.productRepository = productRepository;
@@ -29,13 +28,13 @@ public class ProductController {
 
     @GetMapping("/add")
     public String addProductFrom(Model model){
-        model.addAttribute("product", newProduct);
+        model.addAttribute("product", new Product());
         return "addProduct";
     }
 
     @PostMapping("/return")
-    public String addProduct(){
-        productRepository.addProduct(newProduct);
+    public String addProduct(Product product){
+        productRepository.addProduct(product);
         return "redirect:/";
     }
 }
